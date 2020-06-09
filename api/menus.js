@@ -37,4 +37,29 @@ menusRouter.get('/:menuId', (req, res, next) => {
     res.status(200).json({menu: req.menu});
 });
 
+menusRouter.post('/', (req, res, next) => {
+    const title = req.body.menu.title;
+
+    if (!title) {
+        res.sendStatus(400);
+    } else {
+        db.run(
+            `INSERT INTO Menu (title) VALUES ($title)`,
+            {$title: title},
+            function (error) {
+                if (error) {
+                    next(error);
+                } else {
+                    db.get(
+                        `SELECT * FROM Menu WHERE Menu.id = ${this.lastID}`,
+                        (error, row) => {
+                            res.status(201).json({menu: row});
+                        }
+                    );
+                }
+            }
+        );
+    }
+});
+
 module.exports = menusRouter;
