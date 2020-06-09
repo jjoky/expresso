@@ -12,4 +12,16 @@ db.serialize(() => {
             PRIMARY KEY ('id')
         )`
     );
+
+    db.run(
+        `CREATE TABLE IF NOT EXISTS Timesheet (
+            'id' INTEGER NOT NULL,
+            'hours' INTEGER NOT NULL,
+            'rate' INTEGER NOT NULL,
+            'date' INTEGER NOT NULL,
+            'employee_id' INTEGER NOT NULL,
+            PRIMARY KEY ('id'),
+            FOREIGN KEY ('employee_id') REFERENCES 'Employee'('id')
+        )`
+    );
 });
