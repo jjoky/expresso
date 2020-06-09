@@ -121,4 +121,25 @@ employeesRouter.put('/:employeeId', (req, res, next) => {
     }
 });
 
+employeesRouter.delete('/:employeeId', (req, res, next) => {
+    db.run(
+        `UPDATE Employee
+        SET is_current_employee = 0
+        WHERE Employee.id = ${req.params.employeeId}`,
+        (error) => {
+            if (error) {
+                next(error);
+            } else {
+                db.get(
+                    `SELECT * FROM Employee
+                    WHERE Employee.id = ${req.params.employeeId}`,
+                    (error, row) => {
+                        res.status(200).json({employee: row})
+                    }
+                );
+            }
+        }
+    );
+});
+
 module.exports = employeesRouter;
